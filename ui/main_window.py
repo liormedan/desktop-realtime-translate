@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QPushButton, QComboBox, QHBoxLayout
 )
+import sounddevice as sd
 from PyQt5.QtGui import QFont, QPalette, QColor
 from PyQt5.QtCore import Qt
 
@@ -42,6 +43,12 @@ class MainWindow(QWidget):
         self.language_selector.addItems(["עברית", "אנגלית", "צרפתית", "רוסית", "ערבית"])
         controls.addWidget(self.language_selector)
 
+        # בחירת התקן שמע
+        self.device_selector = QComboBox()
+        for idx, dev in enumerate(sd.query_devices()):
+            self.device_selector.addItem(dev['name'], idx)
+        controls.addWidget(self.device_selector)
+
         self.layout.addLayout(controls)
 
         self.setLayout(self.layout)
@@ -58,3 +65,6 @@ class MainWindow(QWidget):
             "רוסית": "ru",
             "ערבית": "ar",
         }.get(name, "iw")
+
+    def get_selected_device(self):
+        return self.device_selector.currentData()
